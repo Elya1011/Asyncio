@@ -34,8 +34,19 @@ async def get_people(people_id, session):
 
 async def insert_people(people_data: list[dict]):
     async with DbSession() as session:
-        orm_people = [SwapiPeople(json=person) for person in people_data]
-        session.add_all(orm_people)
+        for people in people_data:
+            person = SwapiPeople(
+                id = int(people['id']),
+                birth_year = people.get('birth_year'),
+                eye_color = people.get('eye_color'),
+                gender = people.get('gender'),
+                hair_color = people.get('hair_color'),
+                homeworld = people.get('homeworld'),
+                mass = people.get('mass'),
+                name = people.get('name'),
+                skin_color = people.get('skin_color'),
+            )
+            session.add(person)
         await session.commit()
 
 async def main():
